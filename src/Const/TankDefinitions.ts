@@ -6717,14 +6717,21 @@ const TankDefinitions = JSON.parse(`[
         ]
     },
     {
-        "id": 55,
-        "name": "sex",
+        "id": 56,
+        "name": "sexo",
         "upgradeMessage": "",
-        "levelRequirement": 15,
-        "upgrades": [],
+        "levelRequirement": 0,
+        "upgrades": [
+            1,
+            6,
+            7,
+            8,
+            36
+        ],
         "flags": {
-            "invisibility": true,
+            "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -6742,11 +6749,11 @@ const TankDefinitions = JSON.parse(`[
             {
                 "angle": 0,
                 "offset": 0,
-                "size": 135,
-                "width": 45,
+                "size": 180,
+                "width": 84,
                 "delay": 0,
-                "reload": 0,
-                "recoil": 0,
+                "reload": 10,
+                "recoil": 0.1,
                 "isTrapezoid": false,
                 "trapezoidDirection": 0,
                 "addon": null,
@@ -6754,7 +6761,7 @@ const TankDefinitions = JSON.parse(`[
                     "type": "bullet",
                     "sizeRatio": 1,
                     "health": 1,
-                    "damage": 2147483647,
+                    "damage": 10,
                     "speed": 1,
                     "scatterRate": 1,
                     "lifeLength": 1,
@@ -6798,7 +6805,7 @@ const TankDefinitions = JSON.parse(`[
         ]
     },
     {
-        "id": 56,
+        "id": 55,
         "name": "Rocketeer",
         "upgradeMessage": "",
         "levelRequirement": 45,
