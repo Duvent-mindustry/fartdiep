@@ -23,6 +23,7 @@ import { ObjectFlags, StyleFlags } from "../../../Const/Enums";
 import { TankDefinition } from "../../../Const/TankDefinitions";
 import { BarrelBase } from "../TankBody";
 import { DevTank } from "../../../Const/DevTankDefinitions";
+import { PI2 } from "../../../util";
 
 /**
  * The trap class represents the trap (projectile) entity in diep.
@@ -34,9 +35,11 @@ export default class Trap extends Bullet {
     public constructor(barrel: Barrel, tank: BarrelBase, tankDefinition: TankDefinition | null, shootAngle: number) {
         super(barrel, tank, tankDefinition, shootAngle);
 
+        const bulletDefinition = barrel.definition.bullet;
+
         this.baseSpeed = (barrel.bulletAccel / 2) + 30 - Math.random() * barrel.definition.bullet.scatterRate;
         this.baseAccel = 0;
-        this.physics.values.sides = 3;
+        this.physics.values.sides = bulletDefinition.sides ?? 3;
         if (this.physics.values.objectFlags & ObjectFlags.noOwnTeamCollision) this.physics.values.objectFlags ^= ObjectFlags.noOwnTeamCollision;
         this.physics.values.objectFlags |= ObjectFlags.onlySameOwnerCollision;
         this.style.values.styleFlags |= StyleFlags.trap | StyleFlags.star;
@@ -47,7 +50,7 @@ export default class Trap extends Bullet {
         if (tankDefinition && tankDefinition.id === DevTank.Bouncy) this.collisionEnd = this.lifeLength - 1;
         
         // Check this?
-        this.position.values.angle = Math.random() * Math.PI * 2;
+        this.position.values.angle = Math.random() * PI2;
     }
 
     public tick(tick: number) {

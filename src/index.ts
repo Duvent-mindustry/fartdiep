@@ -24,6 +24,7 @@ import * as util from "./util";
 import GameServer from "./Game";
 import auth from "./Auth";
 import TankDefinitions from "./Const/TankDefinitions";
+import { commandDefinitions } from "./Const/Commands";
 
 const PORT = config.serverPort;
 const ENABLE_API = config.enableApi && config.apiLocation;
@@ -54,9 +55,11 @@ const server = http.createServer((req, res) => {
             case "/servers":
                 res.writeHead(200);
                 return res.end(JSON.stringify(games.map(({ gamemode, name }) => ({ gamemode, name }))));
+            case "/commands":
+                res.writeHead(200);
+                return res.end(JSON.stringify(config.enableCommands ? Object.values(commandDefinitions) : []));
         }
     }
-
 
     if (ENABLE_CLIENT) {
         let file: string | null = null;
@@ -118,9 +121,9 @@ server.listen(PORT, () => {
     //
     // NOTES(0): As of now, both servers run on the same process (and thread) here
     const ffa = new GameServer(wss, "ffa", "FFA");
-    const sbx = new GameServer(wss, "sbx", "Sandbox");
+    const sandbox = new GameServer(wss, "sandbox", "Sandbox");
 
-    games.push(ffa, sbx);
+    games.push(ffa, sandbox);
 
     util.saveToLog("Servers up", "All servers booted up.", 0x37F554);
     util.log("Dumping endpoint -> gamemode routing table");

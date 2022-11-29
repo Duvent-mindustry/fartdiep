@@ -27,6 +27,12 @@ export type preAddonId = "dombase" | "launcher"
 /** A joint list of all post addon ids and pre addon ids. */
 export type addonId = preAddonId | postAddonId;
 
+/** The types of projectiles in the game */
+export type projectileId = "bullet" | "drone" | "trap" | "necrodrone" | "minion" | "skimmer" | "rocket" | "swarm" | "flame" | "wall" | "croc";
+
+/** The types of barrel addons that exist in the game */
+export type barrelAddonId = "trapLauncher";
+
 /** Increase in opacity when taking damage. */
 export const visibilityRateDamage = 0.2;
 
@@ -35,7 +41,7 @@ export const visibilityRateDamage = 0.2;
  */
 export interface BulletDefinition {
     /** The type of the bullet that the barrel shoots. */
-    type: "bullet" | "drone" | "trap" | "minion" | "skimmer" | "rocket" | "flame" | "wall" | "croc";
+    type: projectileId;
     /** Size of the bullet shot out of the barrel in relation to the barrel's size. */
     sizeRatio: number;
     /** Used to calculate the health of the bullet that the barrel shoots. */
@@ -79,7 +85,7 @@ export interface BarrelDefinition {
     /** Direction that the trapezoid is facing. Machine Gun's `trapezoidalDirection` is `0`, and Stalker's is `π`. */
     trapezoidDirection: number;
     /** Barrel addon. As of now only the trapper addon exists. */
-    addon: string | null;
+    addon: barrelAddonId | null;
     /** The maximum numbers of drones the barrel can spawn - only present if `bullet.type` === 'drone'. */
     droneCount?: number;
     /** Whether or not the drones are controllable - only present if `bullet.type` === 'drone'. */
@@ -118,6 +124,8 @@ export interface TankDefinition {
         invisibility: boolean;
         /** If the tank has a Predator-like zoom ability */
         zoomAbility: boolean;
+        /** If the tank can claim squares by killing them (necro) */
+        canClaimSquares?: boolean;
         /** If the tank requires devmode to access (unused). */
         devOnly: boolean;
     },
@@ -168,6 +176,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -253,6 +262,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -356,6 +366,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -485,6 +496,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -613,6 +625,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -760,6 +773,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -1000,6 +1014,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -1085,6 +1100,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -1171,6 +1187,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -1277,6 +1294,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -1407,6 +1425,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -1495,6 +1514,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -1602,6 +1622,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -1760,6 +1781,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -1907,6 +1929,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -2079,6 +2102,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -2160,6 +2184,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -2241,6 +2266,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": true,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -2268,9 +2294,8 @@ const TankDefinitions = JSON.parse(`[
                 "addon": null,
                 "droneCount": 0,
                 "canControlDrones": true,
-                 
                 "bullet": {
-                    "type": "drone",
+                    "type": "necrodrone",
                     "sizeRatio": 1,
                     "health": 2,
                     "damage": 0.42,
@@ -2294,7 +2319,7 @@ const TankDefinitions = JSON.parse(`[
                 "droneCount": 0,
                 "canControlDrones": true,
                 "bullet": {
-                    "type": "drone",
+                    "type": "necrodrone",
                     "sizeRatio": 1,
                     "health": 2,
                     "damage": 0.42,
@@ -2349,6 +2374,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -2543,6 +2569,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -2650,6 +2677,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -2797,6 +2825,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": true,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -2878,6 +2907,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -2959,6 +2989,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -3128,6 +3159,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -3297,6 +3329,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -3402,6 +3435,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": true,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0,
@@ -3485,6 +3519,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -3928,6 +3963,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": true,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -4053,6 +4089,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -4163,6 +4200,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -4244,6 +4282,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -4369,6 +4408,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -4498,6 +4538,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -4579,6 +4620,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -4708,6 +4750,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -4767,6 +4810,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": true,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0,
@@ -4825,6 +4869,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -4972,6 +5017,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -5033,6 +5079,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -5091,6 +5138,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -5392,6 +5440,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -5561,6 +5610,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -5642,6 +5692,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -5723,6 +5774,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -5848,6 +5900,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -6091,6 +6144,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -6119,7 +6173,7 @@ const TankDefinitions = JSON.parse(`[
                 "droneCount": 4294967295,
                 "canControlDrones": false,
                 "bullet": {
-                    "type": "drone",
+                    "type": "swarm",
                     "sizeRatio": 0.7,
                     "health": 1,
                     "damage": 0.15,
@@ -6143,7 +6197,7 @@ const TankDefinitions = JSON.parse(`[
                 "droneCount": 4294967295,
                 "canControlDrones": false,
                 "bullet": {
-                    "type": "drone",
+                    "type": "swarm",
                     "sizeRatio": 0.7,
                     "health": 1,
                     "damage": 0.15,
@@ -6167,7 +6221,7 @@ const TankDefinitions = JSON.parse(`[
                 "droneCount": 4294967295,
                 "canControlDrones": true,
                 "bullet": {
-                    "type": "drone",
+                    "type": "swarm",
                     "sizeRatio": 0.7,
                     "health": 1,
                     "damage": 0.15,
@@ -6191,7 +6245,7 @@ const TankDefinitions = JSON.parse(`[
                 "droneCount": 4294967295,
                 "canControlDrones": true,
                 "bullet": {
-                    "type": "drone",
+                    "type": "swarm",
                     "sizeRatio": 0.7,
                     "health": 1,
                     "damage": 0.15,
@@ -6246,6 +6300,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -6327,6 +6382,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -6385,6 +6441,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -6443,6 +6500,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -6526,6 +6584,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": true
         },
         "visibilityRateShooting": 0.23,
@@ -6584,6 +6643,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -6746,6 +6806,7 @@ const TankDefinitions = JSON.parse(`[
         "flags": {
             "invisibility": false,
             "zoomAbility": false,
+            "canClaimSquares": false,
             "devOnly": false
         },
         "visibilityRateShooting": 0.23,
@@ -6834,4 +6895,8 @@ export const TankCount = TankDefinitions.reduce((a, b) => b ? a + 1 : a, 0);
  */
 export const getTankById = function (id: number): TankDefinition | null {
     return (id < 0 ? DevTankDefinitions[~id] : TankDefinitions[id]) || null;
+}
+
+export const getTankByName = function (tankName: string): TankDefinition | null {
+    return TankDefinitions.find(tank => tank && tank.name === tankName) || DevTankDefinitions.find(tank => tank && tank.name === tankName) || null;
 }

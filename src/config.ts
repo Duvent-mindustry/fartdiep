@@ -29,7 +29,7 @@ export const mspt: number = 40;
 export const tps: number = 1000 / mspt;
 
 /** Max connections per ip. -1 = no limit */
-export const connectionsPerIp: number = -1;
+export const connectionsPerIp: number = 2;
 
 /** Max incoming packet size (HARD LIMIT), not the max read / write size */
 export const wssMaxMessageSize: number = 4096; // 4 kb
@@ -47,7 +47,10 @@ export const mode: string = process.env.NODE_ENV || "development";
 export const enableApi: boolean = true;
 
 /** Rest API location (root of all other endpoints), ignored if enableApi is false */
-export const apiLocation: string = "api"
+export const apiLocation: string = "api";
+
+/** Allows execution of custom commands */
+export const enableCommands: boolean = true;
 
 /** Is hosting a client */
 export const enableClient: boolean = true;
@@ -88,12 +91,15 @@ export const enum AccessLevel {
     NoAccess     = -1
 }
 
-// Every access level, including and above this one is unbannable via client.ban()
+/** Every access level, including and above this one is unbannable via client.ban() */
 export const unbannableLevelMinimum: AccessLevel = AccessLevel.FullAccess;
+
+/** Default access level, client's without valid password's will get set to this */
+export const defaultAccessLevel: AccessLevel = AccessLevel.BetaAccess;
 
 /** The developer tokens by role (UNNECESSARY UNLESS DISCORD INTEGRATION) */
 export const devTokens: Record<string, AccessLevel> = {
-    "*": AccessLevel.BetaAccess
+    "*": defaultAccessLevel
 }
 
 /** Should always be set to the url (UNNECESSARY UNLESS DISCORD INTEGRATION) */

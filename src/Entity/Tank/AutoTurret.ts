@@ -20,7 +20,7 @@ import ObjectEntity from "../Object";
 import Barrel from "./Barrel";
 
 import { BarrelBase } from "./TankBody";
-import { Colors, MotionFlags, NametagFlags, ObjectFlags, Stat, StyleFlags } from "../../Const/Enums";
+import { Colors, InputFlags, MotionFlags, NametagFlags, ObjectFlags, Stat, StyleFlags } from "../../Const/Enums";
 import { BarrelDefinition } from "../../Const/TankDefinitions";
 import { AI, AIState, Inputs } from "../AI";
 import { Entity } from "../../Native/Entity";
@@ -50,10 +50,6 @@ export const AutoTurretDefinition: BarrelDefinition = {
     }
 };
 
-// const sizeRatio = 0.56 * 50;
-// const widthRatio = 1.1 * 50;
-const baseRatio = .5 * 50;
-
 /**
  * Auto Turret Barrel + Barrel Base
  */
@@ -74,10 +70,15 @@ export default class AutoTurret extends ObjectEntity {
     /** Camera entity / team of the turret. */
     public cameraEntity: Entity;
 
+    /** If set to true, (auto 5 auto 3), player can influence auto turret's */
+    public influencedByOwnerInputs: boolean = false;
+
     /** The reload time of the turret. */
     public reloadTime = 15;
+    /** The size of the auto turret base */
+    public baseSize: number;
 
-    public constructor(owner: BarrelBase, turretDefinition: BarrelDefinition = AutoTurretDefinition) {
+    public constructor(owner: BarrelBase, turretDefinition: BarrelDefinition = AutoTurretDefinition, baseSize: number = 25) {
         super(owner.game);
 
         this.cameraEntity = owner.cameraEntity;
@@ -92,7 +93,8 @@ export default class AutoTurret extends ObjectEntity {
         this.relations.values.team = owner.relations.values.team;
 
         this.physics.values.sides = 1;
-        this.physics.values.size = baseRatio * this.sizeFactor;
+        this.baseSize = baseSize;
+        this.physics.values.size = this.baseSize * this.sizeFactor;
 
         this.style.values.color = Colors.Barrel;
         this.style.values.styleFlags |= StyleFlags.aboveParent;
@@ -127,7 +129,7 @@ export default class AutoTurret extends ObjectEntity {
     public tick(tick: number) {
         if (this.inputs !== this.ai.inputs) this.inputs = this.ai.inputs;
 
-        this.physics.size = baseRatio * this.sizeFactor;
+        this.physics.size = this.baseSize * this.sizeFactor;
 
         this.ai.aimSpeed = this.turret.bulletAccel;
         // Top Speed
@@ -135,13 +137,29 @@ export default class AutoTurret extends ObjectEntity {
 
         this.reloadTime = this.owner.reloadTime;
 
-        if (this.ai.state === AIState.idle) {
-            this.position.angle += this.ai.passiveRotation;
-            this.turret.attemptingShot = false;
-        } else {
-            // Uh. Yeah
+        let useAI = !(this.influencedByOwnerInputs && (this.owner.inputs.attemptingRepel() || this.owner.inputs.attemptingShot()));
+        if (!useAI) {
             const {x, y} = this.getWorldPosition();
-            this.position.angle = Math.atan2(this.ai.inputs.mouse.y - y, this.ai.inputs.mouse.x - x);
+            let flip = this.owner.inputs.attemptingRepel() ? -1 : 1;
+            const deltaPos = {x: (this.owner.inputs.mouse.x - x) * flip, y: (this.owner.inputs.mouse.y - y) * flip}
+
+            if (this.ai.targetFilter({x: x + deltaPos.x, y: y + deltaPos.y}) === false) useAI = true;
+            else {
+                // if (this.owner.inputs.attemptingRepel()) this.inputs.flags |= InputFlags.rightclick;
+                this.inputs.flags |= InputFlags.leftclick;
+                this.position.angle = Math.atan2(deltaPos.y, deltaPos.x);
+                this.ai.state |= AIState.hasTarget;
+            }
+        }
+        if (useAI) {
+            if (this.ai.state === AIState.idle) {
+                this.position.angle += this.ai.passiveRotation;
+                this.turret.attemptingShot = false;
+            } else {
+                // Uh. Yeah
+                const {x, y} = this.getWorldPosition();
+                this.position.angle = Math.atan2(this.ai.inputs.mouse.y - y, this.ai.inputs.mouse.x - x);
+            }
         }
     }
 }

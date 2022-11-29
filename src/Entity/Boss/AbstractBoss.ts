@@ -87,9 +87,9 @@ class BossMovementControl {
  */
 export default class AbstractBoss extends LivingEntity {
     /** Always existant name field group, present in all bosses. */
-    public name: NameGroup= new NameGroup(this);
+    public name: NameGroup = new NameGroup(this);
     /** Alternate name, eg Guardian and Guardian of the Pentagons to appear in notifications" */
-    public altName = "";
+    public altName: string | null = null;
 
     /** The active change in size from the base size to the current. Contributes to barrel and addon sizes. */
     public sizeFactor = 1;
@@ -126,7 +126,7 @@ export default class AbstractBoss extends LivingEntity {
 
         this.physics.values.absorbtionFactor = 0.05;
         this.position.values.motion |= MotionFlags.absoluteRotation;
-        this.scoreReward = 30000;
+        this.scoreReward = 30000 * this.game.arena.shapeScoreRewardMultiplier;
         this.damagePerTick = 60;
 
         this.ai = new AI(this);

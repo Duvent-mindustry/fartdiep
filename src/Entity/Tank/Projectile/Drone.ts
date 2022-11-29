@@ -50,15 +50,13 @@ export default class Drone extends Bullet {
         
         this.ai = new AI(this);
         this.ai.viewRange = 850 * tank.sizeFactor;
-        this.ai.targetFilter = (target) => (target.position.values.x - this.tank.position.values.x) ** 2 + (target.position.values.y - this.tank.position.values.y) ** 2 <= this.ai.viewRange ** 2; // (1000 ** 2) 1000 radius
+        this.ai.targetFilter = (targetPos) => (targetPos.x - this.tank.position.values.x) ** 2 + (targetPos.y - this.tank.position.values.y) ** 2 <= this.ai.viewRange ** 2; // (1000 ** 2) 1000 radius
         this.canControlDrones = typeof this.barrelEntity.definition.canControlDrones === 'boolean' && this.barrelEntity.definition.canControlDrones;
         this.physics.values.sides = bulletDefinition.sides ?? 3;
         if (this.physics.values.objectFlags & ObjectFlags.noOwnTeamCollision) this.physics.values.objectFlags ^= ObjectFlags.noOwnTeamCollision;
         this.physics.values.objectFlags |= ObjectFlags.onlySameOwnerCollision;
         this.style.values.styleFlags &= ~StyleFlags.noDmgIndicator;
 
-        // TOD(ABCO:
-        // No hardcoded - unless it is hardcoded in diep (all signs show that it might be so far)
         if (barrel.definition.bullet.lifeLength !== -1) {
             this.lifeLength = 88 * barrel.definition.bullet.lifeLength;
         } else {
@@ -75,7 +73,6 @@ export default class Drone extends Bullet {
         barrel.droneCount += 1;
 
         this.ai.movementSpeed = this.ai.aimSpeed = this.baseAccel;
-        this.ai.isTaken = true;
     }
 
     /** Extends LivingEntity.destroy - so that the drone count decreases for the barrel. */
